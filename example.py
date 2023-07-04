@@ -15,7 +15,8 @@ IMAGE_PASSAROS = [
 ]
 
 pygame.font.init()
-FONTE_PONTOS = pygame.font.SysFont('arial', 50)
+FONTE_PONTOS = pygame.font.SysFont('arial', 30)
+FONTE_RECOMECAR = pygame.font.SysFont('arial', 25)
 
 class Passaro():
   IMGS = IMAGE_PASSAROS
@@ -105,7 +106,7 @@ class Cano():
     self.definir_altura()
 
   def definir_altura(self):
-    self.altura = random.randrange(50, 450)
+    self.altura = random.randrange(50, 350)
     self.posicao_topo = self.altura - self.CANO_TOPO.get_height()
     self.posicao_base = self.altura + self.DISTANCIA
 
@@ -167,58 +168,84 @@ def desenhar_tela(tela, passaros, canos, chao, pontos):
   chao.desenhar(tela)
   pygame.display.update()
 
+def tela_final(tela):
+    texto = FONTE_RECOMECAR.render("Game over. Pressione R para recomeçar.", 1, (255, 255, 255))
+    tela.blit(texto, (TELA_LARGURA / 2 - texto.get_width() / 2, TELA_ALTURA / 2 - texto.get_height() / 2))
+    pygame.display.update()
+
 def main():
-  passaros = [Passaro(230, 350)]
+  passaros = [Passaro(230, 150)]
   chao = Chao(630)
   canos = [Cano(700)]
   tela = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA))
   pontos = 0
   relogio = pygame.time.Clock()
 
+  jogo_terminado = False
   rodando = True
   while rodando:
     relogio.tick(30)
 
-    # interação com o user
-    for evento in pygame.event.get():
-      if evento.type == pygame.QUIT:
-        rodando = False
-        pygame.quit()
-        quit()
-      if evento.type == pygame.KEYDOWN:
-        if evento.key == pygame.K_SPACE:
-          for passaro in passaros:
-            passaro.pular()
+    if len(passaros) == 0:
+        jogo_terminado = True
 
-    # mover as coisas
-    for passaro in passaros:
-      passaro.mover()
-    chao.mover()
+    if jogo_terminado:
+        tela_final(tela)
+        for evento in pygame.event.get():
+          if evento.type == pygame.QUIT:
+            rodando = False
+            pygame.quit()
+            quit()
+          if evento.type == pygame.KEYDOWN:
+              if evento.key == pygame.K_r:
+                  main()
+              if evento.key == pygame.K_ESCAPE:
+                  rodando = False
+                  pygame.quit()
+                  quit()
+    else:
+      # interação com o user
+      for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+          rodando = False
+          pygame.quit()
+          quit()
+        if evento.type == pygame.KEYDOWN:
+          if evento.key == pygame.K_SPACE:
+            for passaro in passaros:
+              passaro.pular()
+          elif evento.key == pygame.K_r and jogo_terminado:
+              main()
 
-    adicionar_cano = False
-    remover_canos = []
-    for cano in canos:
+      # mover as coisas
+      for passaro in passaros:
+        passaro.mover()
+      chao.mover()
+
+      adicionar_cano = False
+      remover_canos = []
+      for cano in canos:
+        for i, passaro in enumerate(passaros):
+          if cano.colidir(passaro):
+            passaros.pop(i)
+          if not cano.passou and passaro.x > cano.x:
+            cano.passou = True
+            adicionar_cano = True
+        cano.mover()
+        if cano.x + cano.CANO_TOPO.get_width() < 0:
+          remover_canos.append(cano)
+
+      if adicionar_cano:
+        pontos += 1
+        canos.append(Cano(600))
+      for cano in remover_canos:
+        canos.remove(cano)
+
       for i, passaro in enumerate(passaros):
-        if cano.colidir(passaro):
+        if (passaro.y + passaro.imagem.get_height()) > chao.y or passaro.y < 0:
           passaros.pop(i)
-        if not cano.passou and passaro.x > cano.x:
-          cano.passou = True
-          adicionar_cano = True
-      cano.mover()
-      if cano.x + cano.CANO_TOPO.get_width() < 0:
-        remover_canos.append(cano)
 
-    if adicionar_cano:
-      pontos += 1
-      canos.append(Cano(600))
-    for cano in remover_canos:
-      canos.remove(cano)
-
-    for i, passaro in enumerate(passaros):
-      if (passaro.y + passaro.imagem.get_height()) > chao.y or passaro.y < 0:
-        passaros.pop(i)
-
-    desenhar_tela(tela, passaros, canos, chao, pontos)
+      desenhar_tela(tela, passaros, canos, chao, pontos)
 
 if __name__ == "__main__":
   main()
