@@ -3,7 +3,7 @@ import os
 import random
 
 TELA_LARGURA = 500
-TELA_ALTURA = 700
+TELA_ALTURA = 800
 
 IMAGE_CANO = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "pipe.png")))
 IMAGE_CHAO = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "base.png")))
@@ -169,7 +169,7 @@ def desenhar_tela(tela, passaros, canos, chao, pontos):
 
 def main():
   passaros = [Passaro(230, 350)]
-  chao = Chao(630)
+  chao = Chao(738)
   canos = [Cano(700)]
   tela = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA))
   pontos = 0
