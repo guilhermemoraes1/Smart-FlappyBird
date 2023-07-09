@@ -219,7 +219,7 @@ def main(genomas, config): #fitness function
     indice_cano = 0
     if len(passaros) > 0:
       # descobrir qual cano olhar
-      if len(canos) > 1 and passaro[0].x > (canos[0].x + canos[0].CANO_TOPO.get_width()):
+      if len(canos) > 1 and passaros[0].x > (canos[0].x + canos[0].CANO_TOPO.get_width()):
         indice_cano = 1
     else:
       rodando = False
@@ -245,7 +245,7 @@ def main(genomas, config): #fitness function
         if cano.colidir(passaro):
           passaros.pop(i)
           if ai_jogando:
-            lista_genomas[i] -= 1
+            lista_genomas[i].fitness -= 1
             lista_genomas.pop(i)
             redes.pop(i)
         if not cano.passou and passaro.x > cano.x:
@@ -273,8 +273,18 @@ def main(genomas, config): #fitness function
     desenhar_tela(tela, passaros, canos, chao, pontos)
 
 def rodar(caminho_config):
-  pass
-
+  config = neat.config.Config(neat.DefaultGenome,
+                              neat.DefaultReproduction,
+                              neat.DefaultSpeciesSet,
+                              neat.DefaultStagnation,
+                              caminho_config)
+  
+  populacao = neat.Population(config)
+  if ai_jogando:
+    populacao.run(main, 50)
+  else:
+    main(None, None)
+    
 if __name__ == "__main__":
   caminho = os.path.dirname(__file__)
   caminho_config = os.path.join(caminho, 'config.txt')
