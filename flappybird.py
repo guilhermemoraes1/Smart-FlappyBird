@@ -186,7 +186,7 @@ def main(genomas, config): #fitness function
     lista_genomas = []
     passaros = []
     for _, genoma in genomas:
-      rede = neet.nn.FeedForwardNetwork.create(genoma, config)
+      rede = neat.nn.FeedForwardNetwork.create(genoma, config)
       redes.append(rede)
       genoma.fitness = 0
       lista_genomas.append(genoma)
@@ -215,6 +215,15 @@ def main(genomas, config): #fitness function
           if evento.key == pygame.K_SPACE:
             for passaro in passaros:
               passaro.pular()
+              
+    indice_cano = 0
+    if len(passaros) > 0:
+      # descobrir qual cano olhar
+      if len(canos) > 1 and passaro[0].x > (canos[0].x + canos[0].CANO_TOPO.get_width()):
+        indice_cano = 1
+    else:
+      rodando = False
+      break
 
     # mover as coisas
     for passaro in passaros:
