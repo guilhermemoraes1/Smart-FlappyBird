@@ -226,8 +226,16 @@ def main(genomas, config): #fitness function
       break
 
     # mover as coisas
-    for passaro in passaros:
+    for i, passaro in enumerate(passaros):
       passaro.mover()
+      # aumentar um pouco a fitness do passaro
+      lista_genomas[i].fitness += 0.1
+      output = redes[i].activate((passaro.y, 
+                                  abs(passaro.y - canos[indice_cano].altura), 
+                                  abs(passaro.y - canos[indice_cano].posicao_base)))
+      # -1 e 1 -> se o output for > 0.5 então o passaro pula
+      if output[0] > 0.5:
+        passaro.pular()
     chao.mover()
 
     adicionar_cano = False
