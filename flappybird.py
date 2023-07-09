@@ -272,8 +272,10 @@ def main(genomas, config): #fitness function
 
     desenhar_tela(tela, passaros, canos, chao, pontos)
 
-def rodar():
+def rodar(caminho_config):
   pass
 
 if __name__ == "__main__":
-  main()
+  caminho = os.path.dirname(__file__)
+  caminho_config = os.path.join(caminho, 'config.txt')
+  rodar(caminho_config)
