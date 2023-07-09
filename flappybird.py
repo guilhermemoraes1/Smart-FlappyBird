@@ -280,6 +280,9 @@ def rodar(caminho_config):
                               caminho_config)
   
   populacao = neat.Population(config)
+  populacao.add_reporter(neat.StdOutReporter(True))
+  populacao.add_reporter(neat.StatisticsReporter())
+  
   if ai_jogando:
     populacao.run(main, 50)
   else:
