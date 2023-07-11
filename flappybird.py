@@ -3,8 +3,8 @@ import os
 import random
 import neat
 
-ai_jogando = True
-geracao = 0
+ia_playing = True
+generation = 0
 
 TELA_LARGURA = 500
 TELA_ALTURA = 800
@@ -169,8 +169,8 @@ def desenhar_tela(tela, passaros, canos, chao, pontos):
   texto = FONTE_PONTOS.render(f"Pontuação: {pontos}", 1, (255, 255, 255))
   tela.blit(texto, (TELA_LARGURA - 10 - texto.get_width(), 10))
 
-  if ai_jogando:
-    texto = FONTE_PONTOS.render(f"Geração: {geracao}", 1, (255, 255, 255))
+  if ia_playing:
+    texto = FONTE_PONTOS.render(f"Geração: {generation}", 1, (255, 255, 255))
     tela.blit(texto, (10, 10))
 
 
@@ -178,10 +178,10 @@ def desenhar_tela(tela, passaros, canos, chao, pontos):
   pygame.display.update()
 
 def main(genomas, config): #fitness function
-  global geracao
-  geracao += 1
+  global generation
+  generation += 1
 
-  if ai_jogando:
+  if ia_playing:
     redes = []
     lista_genomas = []
     passaros = []
@@ -210,7 +210,7 @@ def main(genomas, config): #fitness function
         rodando = False
         pygame.quit()
         quit()
-      if not ai_jogando:
+      if not ia_playing:
         if evento.type == pygame.KEYDOWN:
           if evento.key == pygame.K_SPACE:
             for passaro in passaros:
@@ -244,7 +244,7 @@ def main(genomas, config): #fitness function
       for i, passaro in enumerate(passaros):
         if cano.colidir(passaro):
           passaros.pop(i)
-          if ai_jogando:
+          if ia_playing:
             lista_genomas[i].fitness -= 1
             lista_genomas.pop(i)
             redes.pop(i)
@@ -266,7 +266,7 @@ def main(genomas, config): #fitness function
     for i, passaro in enumerate(passaros):
       if (passaro.y + passaro.imagem.get_height()) > chao.y or passaro.y < 0:
         passaros.pop(i)
-        if ai_jogando:
+        if ia_playing:
           lista_genomas.pop(i)
           redes.pop(i)
 
@@ -283,7 +283,7 @@ def rodar(caminho_config):
   populacao.add_reporter(neat.StdOutReporter(True))
   populacao.add_reporter(neat.StatisticsReporter())
   
-  if ai_jogando:
+  if ia_playing:
     populacao.run(main, 50)
   else:
     main(None, None)
