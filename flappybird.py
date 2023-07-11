@@ -7,7 +7,7 @@ ia_playing = True
 generation = 0
 
 TELA_LARGURA = 500
-TELA_ALTURA = 800
+TELA_ALTURA = 700
 
 IMAGE_CANO = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "pipe.png")))
 IMAGE_CHAO = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "base.png")))
@@ -19,7 +19,7 @@ IMAGE_PASSAROS = [
 ]
 
 pygame.font.init()
-FONTE_PONTOS = pygame.font.SysFont('arial', 50)
+FONTE_PONTOS = pygame.font.SysFont('arial', 30)
 
 class Passaro():
   IMGS = IMAGE_PASSAROS
@@ -109,7 +109,7 @@ class Cano():
     self.definir_altura()
 
   def definir_altura(self):
-    self.altura = random.randrange(50, 450)
+    self.altura = random.randrange(50, 350)
     self.posicao_topo = self.altura - self.CANO_TOPO.get_height()
     self.posicao_base = self.altura + self.DISTANCIA
 
@@ -194,7 +194,8 @@ def main(genomas, config): #fitness function
   else:
     passaros = [Passaro(230, 350)]
 
-  chao = Chao(738)
+  lista_genomas = []
+  chao = Chao(630)
   canos = [Cano(700)]
   tela = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA))
   pontos = 0
