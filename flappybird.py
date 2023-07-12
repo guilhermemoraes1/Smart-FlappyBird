@@ -3,7 +3,7 @@ import os
 import random
 import neat
 
-ia_playing = True
+ia_playing = False
 generation = 0
 
 TELA_LARGURA = 500
@@ -173,7 +173,6 @@ def desenhar_tela(tela, passaros, canos, chao, pontos):
     texto = FONTE_PONTOS.render(f"Geração: {generation}", 1, (255, 255, 255))
     tela.blit(texto, (10, 10))
 
-
   chao.desenhar(tela)
   pygame.display.update()
 
@@ -181,10 +180,10 @@ def main(genomas, config): #fitness function
   global generation
   generation += 1
 
+  redes = []
+  lista_genomas = []
+  passaros = []
   if ia_playing:
-    redes = []
-    lista_genomas = []
-    passaros = []
     for _, genoma in genomas:
       rede = neat.nn.FeedForwardNetwork.create(genoma, config)
       redes.append(rede)
@@ -193,7 +192,7 @@ def main(genomas, config): #fitness function
       passaros.append(Passaro(230, 350))
   else:
     passaros = [Passaro(230, 350)]
-
+    
   chao = Chao(630)
   canos = [Cano(700)]
   tela = pygame.display.set_mode((TELA_LARGURA, TELA_ALTURA))
@@ -228,14 +227,15 @@ def main(genomas, config): #fitness function
     # mover as coisas
     for i, passaro in enumerate(passaros):
       passaro.mover()
-      # aumentar um pouco a fitness do passaro
-      lista_genomas[i].fitness += 0.1
-      output = redes[i].activate((passaro.y, 
-                                  abs(passaro.y - canos[indice_cano].altura), 
-                                  abs(passaro.y - canos[indice_cano].posicao_base)))
-      # -1 e 1 -> se o output for > 0.5 então o passaro pula
-      if output[0] > 0.5:
-        passaro.pular()
+      if ia_playing:
+        # aumentar um pouco a fitness do passaro
+        lista_genomas[i].fitness += 0.1
+        output = redes[i].activate((passaro.y, 
+                                    abs(passaro.y - canos[indice_cano].altura), 
+                                    abs(passaro.y - canos[indice_cano].posicao_base)))
+        # -1 e 1 -> se o output for > 0.5 então o passaro pula
+        if output[0] > 0.5:
+          passaro.pular()
     chao.mover()
 
     adicionar_cano = False
