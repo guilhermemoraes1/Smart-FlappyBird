@@ -166,11 +166,11 @@ def draw_screen(screen, birds, pipes, floor, points):
   for cano in pipes:
     cano.draw(screen)
 
-  text = POINTS_FONT.render(f"Pontuação: {points}", 1, (255, 255, 255))
+  text = POINTS_FONT.render(f"Pontuação: {points}", 1, (245, 245, 245))
   screen.blit(text, (SCREEN_WIDTH - 10 - text.get_width(), 10))
 
   if ia_playing:
-    text = POINTS_FONT.render(f"Geração: {generation}", 1, (255, 255, 255))
+    text = POINTS_FONT.render(f"Geração: {generation}", 1, (245, 245, 245))
     screen.blit(text, (10, 10))
 
   floor.draw(screen)
