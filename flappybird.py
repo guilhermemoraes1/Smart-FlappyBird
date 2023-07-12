@@ -3,7 +3,7 @@ import os
 import random
 import neat
 
-ia_playing = False
+ia_playing = True
 generation = 0
 
 TELA_LARGURA = 500
@@ -166,11 +166,11 @@ def desenhar_tela(tela, passaros, canos, chao, pontos):
   for cano in canos:
     cano.desenhar(tela)
 
-  texto = FONTE_PONTOS.render(f"Pontuação: {pontos}", 1, (255, 255, 255))
+  texto = FONTE_PONTOS.render(f"Pontuação: {pontos}", 1, (245, 245, 245))
   tela.blit(texto, (TELA_LARGURA - 10 - texto.get_width(), 10))
 
   if ia_playing:
-    texto = FONTE_PONTOS.render(f"Geração: {generation}", 1, (255, 255, 255))
+    texto = FONTE_PONTOS.render(f"Geração: {generation}", 1, (245, 245, 245))
     tela.blit(texto, (10, 10))
 
   chao.desenhar(tela)
