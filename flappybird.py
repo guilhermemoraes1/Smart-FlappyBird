@@ -182,7 +182,6 @@ def tela_final(screen):
     screen.blit(texto, (SCREEN_WIDTH / 2 - texto.get_width() / 2, SCREEN_HEIGHT / 2 - texto.get_height() / 2))
     pygame.display.update()
 
-
 def main(genomes, config): #fitness function
   global generation
   generation += 1
@@ -216,6 +215,11 @@ def main(genomes, config): #fitness function
         rodando = False
         pygame.quit()
         quit()
+      if evento.type == pygame.KEYDOWN:
+        if evento.key == pygame.K_ESCAPE:
+          rodando = False
+          pygame.quit()
+          quit()
       if not ia_playing:
         if evento.type == pygame.KEYDOWN:
           if evento.key == pygame.K_SPACE:
@@ -292,10 +296,6 @@ def main(genomes, config): #fitness function
               if evento.key == pygame.K_r:
                 jogo_terminado = False
                 main(None, None)
-                    
-              if evento.key == pygame.K_ESCAPE:
-                  jogo_terminado = False
-                  rodando = False
 
 def rodar(config_path):
   config = neat.config.Config(neat.DefaultGenome,
