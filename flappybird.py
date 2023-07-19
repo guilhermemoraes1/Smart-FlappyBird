@@ -20,6 +20,7 @@ BIRDS_IMAGES = [
 
 pygame.font.init()
 POINTS_FONT = pygame.font.SysFont('arial', 30)
+FONTE_RECOMECAR = pygame.font.SysFont('arial', 25)
 
 class Passaro():
   IMGS = BIRDS_IMAGES
@@ -175,6 +176,12 @@ def draw_screen(screen, birds, pipes, floor, points):
 
   floor.draw(screen)
   pygame.display.update()
+  
+def tela_final(screen):
+    texto = FONTE_RECOMECAR.render("Game over. Pressione R para recomeçar.", 1, (255, 255, 255))
+    screen.blit(texto, (SCREEN_WIDTH / 2 - texto.get_width() / 2, SCREEN_HEIGHT / 2 - texto.get_height() / 2))
+    pygame.display.update()
+
 
 def main(genomes, config): #fitness function
   global generation
@@ -271,6 +278,24 @@ def main(genomes, config): #fitness function
           networks.pop(i)
 
     draw_screen(screen, birds, pipes, floor, points)
+    
+            # Verifica se o pássaro morreu e a IA não está jogando
+    if not ia_playing and len(birds) == 0:
+        jogo_terminado = True
+        while jogo_terminado:
+          tela_final(screen)
+          for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                jogo_terminado = False
+                rodando = False
+            if evento.type == pygame.KEYDOWN:
+              if evento.key == pygame.K_r:
+                jogo_terminado = False
+                main(None, None)
+                    
+              if evento.key == pygame.K_ESCAPE:
+                  jogo_terminado = False
+                  rodando = False
 
 def rodar(config_path):
   config = neat.config.Config(neat.DefaultGenome,
